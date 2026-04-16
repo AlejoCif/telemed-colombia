@@ -410,31 +410,33 @@
         function initCarousel(id, selector) {
           const track = document.getElementById('track-' + id);
           const items = track.querySelectorAll(selector);
+          const gap = 16;
           const visible = window.innerWidth >= 1024 ? 4 : window.innerWidth >= 640 ? 2 : 1;
+          const containerWidth = track.parentElement.offsetWidth;
+          const itemWidth = Math.floor((containerWidth - gap * (visible - 1)) / visible);
           items.forEach(item => {
-            const gap = 16;
-            const containerWidth = track.parentElement.offsetWidth;
-            item.style.width = `calc(${100 / visible}% - ${gap * (visible - 1) / visible}px)`;
+            item.style.width = itemWidth + 'px';
+            item.style.flexShrink = '0';
           });
-          carouselState[id] = { index: 0, total: items.length, visible };
+          track.style.justifyContent = items.length <= visible ? 'center' : 'flex-start';
+          carouselState[id] = { index: 0, total: items.length, visible, itemWidth };
         }
 
         function moveCarousel(id, dir) {
           const state = carouselState[id];
           if (!state) return;
           const track = document.getElementById('track-' + id);
-          const maxIndex = state.total - state.visible;
+          const maxIndex = Math.max(0, state.total - state.visible);
           state.index = Math.max(0, Math.min(state.index + dir, maxIndex));
-          const itemWidth = track.children[0].offsetWidth + 16;
-          track.style.transform = `translateX(-${state.index * itemWidth}px)`;
+          track.style.transform = `translateX(-${state.index * (state.itemWidth + 16)}px)`;
         }
 
         window.addEventListener('load', () => {
           initCarousel('asociados-co', '.carousel-item-as-co');
         });
         window.addEventListener('resize', () => {
-          initCarousel('asociados-co', '.carousel-item-as-co');
           document.getElementById('track-asociados-co').style.transform = 'translateX(0)';
+          initCarousel('asociados-co', '.carousel-item-as-co');
         });
       </script>
 
