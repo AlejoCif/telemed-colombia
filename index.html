@@ -4,6 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Estas en Telemed COLOMBIA</title>
+  <script>
+    (function() {
+      if (!new URLSearchParams(window.location.search).has('from')) {
+        window.location.replace('https://telemed-group.cl/');
+      }
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>.pill{width:72px;height:72px;border-radius:9999px;display:grid;place-items:center}</style>
   <style>
